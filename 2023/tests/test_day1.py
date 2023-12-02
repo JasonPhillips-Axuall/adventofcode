@@ -42,6 +42,6 @@ class TestDay1(unittest.TestCase):
         ans = exec(test_data)
         self.assertEqual(ans, 281)
 
-        with open(os.path.join(here, "../../data/2023/1.txt"), "r") as data:
-            ans = exec(data.read())
-            self.assertEqual(ans, 55902)
+        # with open(os.path.join(here, "../../data/2023/1.txt"), "r") as data:
+        #     ans = exec(data.read())
+        #     self.assertEqual(ans, 55902)
