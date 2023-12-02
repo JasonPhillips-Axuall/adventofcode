@@ -46,21 +46,21 @@ def get_last_number(line):
 #         num_str = ""
 
 
+def get_number_str(line):
+    retVal = ""
+    retVal += get_first_number(line)
+    retVal += get_last_number(line)
+    return retVal
+
 def exec(data):
     retVal = 0
     for line in data.split("\n"):
-        num_str = ""
-        num_str += get_first_number(line)
-        num_str += get_last_number(line)
+        retVal += int(get_number_str(line) )
 
-        print(num_str, line)
-        
-        retVal += int(num_str)
-        # print(num_str)
-        num_str = ""
-
-    print(retVal)
+    return(retVal)
 
 
-with open(os.path.join(here, "../data/2023/1.txt"), "r") as data:
-    exec(data.read())
+if __name__ == "__main__":
+    with open(os.path.join(here, "../data/2023/1.txt"), "r") as data:
+        ans = exec(data.read())
+        print(ans)
