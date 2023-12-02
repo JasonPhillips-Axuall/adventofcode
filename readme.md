@@ -1,0 +1,1 @@
+[![Tests](https://github.com/JasonPhillips-Axuall/adventofcode/actions/workflows/main.yaml/badge.svg)](https://github.com/JasonPhillips-Axuall/adventofcode/actions/workflows/main.yaml)
