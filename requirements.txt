@@ -1,0 +1,4 @@
+pytest
+genbadge
+defusedxml
+coverage
