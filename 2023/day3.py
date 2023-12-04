@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # return all indexes of tokens in a line
 def token_indexes(line, reg = number_regex):
-    retval = [(m.start(), m.end()) for m in re.finditer(reg, line)]
+    retval = [(m.start(), m.end(), m.group()) for m in re.finditer(reg, line)]
     return retval
 
 def has_symbol_between(line, start_idx, end_idx, reg):
@@ -23,23 +23,29 @@ def has_symbol_between(line, start_idx, end_idx, reg):
     
     return False
 
-def is_between(line, number_token, symbol_token):
+def is_between(number_token, symbol_token):
     symbol_set = set(range(symbol_token[0]-1, symbol_token[1]+1))
     number_set = set(range(number_token[0], number_token[1]))
     test = symbol_set.intersection(number_set)
 
     return len(test) > 0
 
-def exec(data):
+def get_gear_list(token, arr, number_tokens):
+    for number_token in number_tokens:
+        if is_between(number_token, token):
+            arr.append(int(number_token[2]))
+
+    return arr
+
+def main(data):
 
     total = 0
     lines = data.split("\n")
     for y, line in enumerate(lines):
-        print("line: ", y+1)
         tokens = token_indexes(line, gear_regex)
         
         for token in tokens:  
-            num_arr = []
+            gear_list = []
             for test_line_idx in range(y-1, y+2):
 
                 if test_line_idx < 0:
@@ -48,18 +54,14 @@ def exec(data):
                     continue
 
                 number_tokens = token_indexes(lines[test_line_idx], number_regex)
-                for number_token in number_tokens:
-                    if is_between(lines[test_line_idx], number_token, token):
-                        print(lines[test_line_idx][number_token[0]:number_token[1]])
-                        num_arr.append(int(lines[test_line_idx][number_token[0]:number_token[1]]))
+                gear_list = get_gear_list(token, gear_list, number_tokens)
 
-            if len(num_arr) == 2:
-                print(num_arr)
-                total += (num_arr[0] * num_arr[1])
+            if len(gear_list) == 2:
+                total += (gear_list[0] * gear_list[1])
  
     return total
 
 
 if __name__ == "__main__":
     with open(os.path.join(HERE, "../data/2023/3.txt"), "r") as data:
-        print(exec(data.read()))
+        print(main(data.read()))
