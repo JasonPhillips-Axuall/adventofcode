@@ -12,6 +12,7 @@ def build_map(data):
 
         m[s[1], s[1]+s[2]-1] = s[0] - s[1]
 
+
     return m
 
 def find_location(maps, seed):
@@ -29,11 +30,35 @@ def main(data):
     seeds = chunks.pop(0)
     seed_arr = [int(s) for s in seeds.split(':')[1].split()]
     maps = []
+    cache = {}
+    retval = None
     for idx, chunk in enumerate(chunks):
         m = build_map(chunk)
         maps.append(m)
-    
-    return min([find_location(maps, s) for s in seed_arr])
+
+    # answer_map = combine_maps(maps)
+
+    while len(seed_arr) > 0:
+        print(len(seed_arr))
+        start = seed_arr.pop(0)
+        end = seed_arr.pop(0)
+
+        i = start
+        while i <= start + end:
+            # if i in cache:
+            #     if retval > cache[i]:
+            #         retval = cache[i]
+
+            #     print('loaded from cache')
+            #     continue
+
+            location = find_location(maps, i)
+            if retval is None or retval > location:
+                retval = location
+                # cache[i] = location
+            i += 1
+        
+    return retval
     
 if __name__ == '__main__':
     import os
