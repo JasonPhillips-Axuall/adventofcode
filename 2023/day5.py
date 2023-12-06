@@ -36,7 +36,11 @@ def non_overlapping_span(arr1, arr2):
     # |------|                  arr1
     #         |---------------| arr2
     if arr1[1] < arr2[0]:
-        return list(arr1, arr2)
+        return [arr1, arr2]
+
+    if arr1[0] == arr2[0] and arr1[1] == arr2[1]:
+        section = [arr1[0], arr1[1], arr1[2] + arr2[2]]
+        return [section]
     
     # start or next == end
     # |-------|                 arr1
@@ -46,7 +50,7 @@ def non_overlapping_span(arr1, arr2):
         section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
         section3 = [arr1[1]-1, arr2[1], arr2[2]] #gets value from two
 
-        return retval
+        return [section1, section2, section3]
     
     # |--------------------|    arr1
     #         |---------------| arr2
@@ -55,18 +59,17 @@ def non_overlapping_span(arr1, arr2):
         section1 = [arr1[0], arr2[0] -1, arr1[2]]# gets value from one
         section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
         section3 = [arr1[1] + 1, arr2[1], arr2[2]] #gets value from two
-        pass
+        return [section1, section2, section3]
+
 
     # |-------------------|     arr1
     #        |---------|        arr2
     # |-----||---------||--|
     if arr1[1] > arr2[0] and arr1[1] > arr2[1]:
         section1 = [arr1[0], arr2[0] -1, arr1[2]] # gets value from one
-        section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
+        section2 = [arr2[0], arr2[1], arr1[2] + arr2[2]] #gets value from both
         section3 = [arr2[1] + 1, arr1[1], arr2[2]] #gets value from two
-        pass
-
-    return retval
+        return [section1, section2, section3]
 
 
 def combine_maps(maps):
@@ -77,40 +80,38 @@ def combine_maps(maps):
     m = maps.pop(0)
     
     while len(maps) > 0:
-        rv = []
         m += maps.pop(0)
         tmp = sort_maps(m)
+        rv = [tmp.pop(0)]
+        for i in range(len(tmp)):
+            t = tmp[i]
+            l = rv.pop()
+            rv += non_overlapping_span(l, t)
 
-        while len(tmp) > 0:
-            t = tmp.pop(0)
+            # if t[0] > rv[-1][1]:
+            #     rv.append(t)
+            #     continue
 
-            if len(rv) == 0:
-                rv.append(t)
-                continue
-            
-            if t[0] > rv[-1][1]:
-                rv.append(t)
-                continue
+            # # reset last element ad new 
+            # if t[0] <= rv[-1][1] and t[1] >= rv[-1][1]:
+            #     rv[-1][1] = t[0] -1
+            #     rv[-1][2] = rv[-1][2] + t[2]
+            #     rv.append(t)
+            #     continue
 
-            # reset last element ad new 
-            if t[0] <= rv[-1][1] and t[1] >= rv[-1][1]:
-                rv[-1][1] = t[0] -1
-                rv[-1][2] = rv[-1][2] + t[2]
-                rv.append(t)
-                continue
-
-            if t[0] <= rv[-1][1] and t[1] < rv[-1][1]:
-                r = rv.pop()
-                r2  = copy.deepcopy(r)
-                r[1] = t[0] - 1
-                r[2] = r[2] + t[2]
-                rv.append(r)
-                rv.append(t)
-                r2[0] = t[1] + 1
-                r2[2] = r2[2] + t[2]
-                rv.append(r2)
-                continue
+            # if t[0] <= rv[-1][1] and t[1] < rv[-1][1]:
+            #     r = rv.pop()
+            #     r2  = copy.deepcopy(r)
+            #     r[1] = t[0] - 1
+            #     r[2] = r[2] + t[2]
+            #     rv.append(r)
+            #     rv.append(t)
+            #     r2[0] = t[1] + 1
+            #     r2[2] = r2[2] + t[2]
+            #     rv.append(r2)
+            #     continue
         m = rv
+        rv = []
 
     retval = rv
     return retval
@@ -126,7 +127,7 @@ def main(data):
         m = build_map(chunk)
         maps.append(m)
 
-    # answer_map = combine_maps(maps)
+    answer_map = combine_maps(maps)
 
     while len(seed_arr) > 0:
         print(len(seed_arr))
