@@ -1,3 +1,5 @@
+import copy
+
 def build_map_names(line):
     return line.split(' ')[0]
 
@@ -5,12 +7,12 @@ def build_map(data):
     lines = data.split('\n')
     names = build_map_names(lines.pop(0))
 
-    m = {}
+    m = []
 
     for line in lines:
         s = [int(s) for s in line.split()]
 
-        m[s[1], s[1]+s[2]-1] = s[0] - s[1]
+        m.append([s[1], s[1]+s[2]-1, s[0] - s[1] ])
 
 
     return m
@@ -24,6 +26,94 @@ def find_location(maps, seed):
                 break
         
     return step
+
+def sort_maps(map):
+    return sorted(map, key=lambda n: (n[0], n[1]))
+
+def non_overlapping_span(arr1, arr2):
+    retval = []
+    # end is after start just return them
+    # |------|                  arr1
+    #         |---------------| arr2
+    if arr1[1] < arr2[0]:
+        return list(arr1, arr2)
+    
+    # start or next == end
+    # |-------|                 arr1
+    #         |---------------| arr2
+    if arr1[1] == arr2[0]:
+        section1 = [arr1[0], arr2[0] -1, arr1[2]] # gets value from one
+        section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
+        section3 = [arr1[1]-1, arr2[1], arr2[2]] #gets value from two
+
+        return retval
+    
+    # |--------------------|    arr1
+    #         |---------------| arr2
+    # end is before start and end is after start
+    if arr1[1] > arr2[0] and arr1[1] < arr2[1]:
+        section1 = [arr1[0], arr2[0] -1, arr1[2]]# gets value from one
+        section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
+        section3 = [arr1[1] + 1, arr2[1], arr2[2]] #gets value from two
+        pass
+
+    # |-------------------|     arr1
+    #        |---------|        arr2
+    # |-----||---------||--|
+    if arr1[1] > arr2[0] and arr1[1] > arr2[1]:
+        section1 = [arr1[0], arr2[0] -1, arr1[2]] # gets value from one
+        section2 = [arr2[0], arr1[1], arr1[2] + arr2[2]] #gets value from both
+        section3 = [arr2[1] + 1, arr1[1], arr2[2]] #gets value from two
+        pass
+
+    return retval
+
+
+def combine_maps(maps):
+    retval = []
+    # current = maps.pop(0)
+    # while len(maps) > 0:
+        # next = maps.pop(0)
+    m = maps.pop(0)
+    
+    while len(maps) > 0:
+        rv = []
+        m += maps.pop(0)
+        tmp = sort_maps(m)
+
+        while len(tmp) > 0:
+            t = tmp.pop(0)
+
+            if len(rv) == 0:
+                rv.append(t)
+                continue
+            
+            if t[0] > rv[-1][1]:
+                rv.append(t)
+                continue
+
+            # reset last element ad new 
+            if t[0] <= rv[-1][1] and t[1] >= rv[-1][1]:
+                rv[-1][1] = t[0] -1
+                rv[-1][2] = rv[-1][2] + t[2]
+                rv.append(t)
+                continue
+
+            if t[0] <= rv[-1][1] and t[1] < rv[-1][1]:
+                r = rv.pop()
+                r2  = copy.deepcopy(r)
+                r[1] = t[0] - 1
+                r[2] = r[2] + t[2]
+                rv.append(r)
+                rv.append(t)
+                r2[0] = t[1] + 1
+                r2[2] = r2[2] + t[2]
+                rv.append(r2)
+                continue
+        m = rv
+
+    retval = rv
+    return retval
     
 def main(data):
     chunks = data.split('\n\n')

@@ -1,7 +1,7 @@
 
 import unittest
 
-from day5 import build_map, build_map_names, main
+from day5 import build_map, build_map_names, combine_maps, main
 
 test_data = """seeds: 79 14 55 13
 
@@ -43,5 +43,11 @@ class TestDay5(unittest.TestCase):
         self.assertEqual(build_map_names("seed-to-soil map:"), 'seed-to-soil')
         self.assertEqual(build_map_names("soil-to-fertilizer map:"), 'soil-to-fertilizer')
         
+    def test_combine_maps(self):
+        t = [[[1, 2], 1], [[3, 4], 1]]
+        c = combine_maps(t)
+        self.assertEqual(c, t)
+
     def test_main(self):
-        self.assertEqual(main(test_data), 35)
+        # self.assertEqual(main(test_data), 35)
+        self.assertEqual(main(test_data), 46)
