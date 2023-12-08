@@ -50,9 +50,12 @@ class TestDay7(unittest.TestCase):
         self.assertTrue(is_full_house(['A', 'A', 'A', 'A', 'A']))
 
     def test_four_of_a_kind(self):
-        self.assertTrue(is_four_of_a_kind([*'T55J5']))
-        self.assertTrue(is_four_of_a_kind([*'KTJJT']))
-        self.assertTrue(is_four_of_a_kind([*'QQQJA']))
+        # self.assertTrue(is_four_of_a_kind(['T','5','5','J','5']))
+        # self.assertTrue(is_four_of_a_kind(['K','T','J','J','T']))
+        # self.assertTrue(is_four_of_a_kind(['Q','Q','Q','J','A']))
+        self.assertTrue(is_four_of_a_kind(['J','J','5','5','3']))
+        self.assertTrue(is_four_of_a_kind(['J','J','5','5','6']))
+
         
     # def test_hand_value(self):
     #     self.assertEqual(hand_value(['1', '1', '1', '1', '1']), '0101010101')

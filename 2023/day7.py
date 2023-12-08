@@ -9,8 +9,9 @@ def group_hand(hand):
     if joker_count > 0:
         hand = [*''.join(hand).replace('J', '')]
 
-    sorted_hand = groupby(sorted(hand, key=lambda x: hand_value(x[0])))
+    sorted_hand = groupby(sorted(hand))
     groups = [(c,len(list(cgen))) for c,cgen in sorted_hand]
+    groups = sorted(groups, key=lambda x: (x[1], hand_value(x[0])), reverse=True)
     
     if len(groups) == 0:
         return [('1',5)]
