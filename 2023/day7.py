@@ -1,11 +1,26 @@
 
 from itertools import groupby
-from functools import reduce
 
-suit = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+suit = ['J', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', '', 'Q', 'K', 'A']
 
 def group_hand(hand):
-    return [(c,len(list(cgen))) for c,cgen in groupby(sorted(hand))]
+    joker_count = hand.count('J')
+    
+    if joker_count > 0:
+        hand = [*''.join(hand).replace('J', '')]
+
+    sorted_hand = groupby(sorted(hand, key=lambda x: hand_value(x[0])))
+    groups = [(c,len(list(cgen))) for c,cgen in sorted_hand]
+    
+    if len(groups) == 0:
+        return [('1',5)]
+
+    if joker_count > 0:
+        group = groups.pop(0)
+        group = (group[0], group[1] + joker_count)
+        groups.append(group)
+
+    return groups
 
 def is_five_of_a_kind(hand):
     groups = group_hand(hand)
@@ -13,45 +28,50 @@ def is_five_of_a_kind(hand):
 
 def is_four_of_a_kind(hand):
     groups = group_hand(hand)
-    return any([v == 4 for _,v in groups])
+    return any([v >= 4 for _,v in groups])
 
 def is_full_house(hand):
     groups = group_hand(hand)
+    is_5 = any([v == 5 for _,v in groups])
     has_3 = any([v == 3 for _,v in groups])
     has_2 = any([v == 2 for _,v in groups])
-    return has_3 and has_2
+    return (has_3 and has_2) or is_5
 
 def is_3_of_a_kind(hand):
     groups = group_hand(hand)
+    is_5 = any([v == 5 for _,v in groups])
     has_3 = any([v == 3 for _,v in groups])
     has_2 = any([v == 2 for _,v in groups])
-    return has_3 and not has_2
+    return (has_3 and not has_2) or is_5
 
 def is_two_pair(hand):
     groups = group_hand(hand)
+    is_5 = any([v == 5 for _,v in groups])
     has_3 = any([v == 3 for _,v in groups])
     count = 0
     for _,v in groups:
         if v == 2:
             count += 1
 
-    return  count == 2 and not has_3
+    return  (count == 2 and not has_3) or is_5
 
 def is_2_of_a_kind(hand):
     groups = group_hand(hand)
+    is_5 = any([v == 5 for _,v in groups])
     has_3 = any([v == 3 for _,v in groups])
     count = 0
     for _,v in groups:
         if v == 2:
             count += 1
 
-    return  count == 1 and not has_3
+    return  (count >= 1 and not has_3) or is_5
 
 def trade(c):
     return str(suit.index(c)).rjust(2, '0')
 
 def hand_value(hand):
-     return ''.join([str(trade(c)) for c in hand])
+    retval =  ''.join([str(trade(c)) for c in hand])
+    return retval
 
 def calc_hand(hand):
     flags = [is_five_of_a_kind(hand) * 1,
@@ -86,3 +106,6 @@ if __name__ == '__main__':
 
     with open(os.path.join(HERE, "../data/2023/7.txt"), "r") as data:
         print(main(data.read()))
+
+#   249516770
+    # 249491963
