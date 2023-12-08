@@ -67,15 +67,14 @@ class TestDay5(unittest.TestCase):
         self.assertEqual(n[2][0], 54)
         self.assertEqual(n[2][1], 97)
 
-    def test_combine_maps(self):
-        pass
-        # maps = [[[0, 14, 39], [15, 51, -15], [50, 97, 2], [52, 53, -15], [98, 99, -48]]]
-        # ans = [[[0, 14, 39], [15, 49, -15], [50, 51, 2], [52, 53, -15], [98, 99, -48]]]
-        # combined = combine_maps(maps)
-        # self.assertEqual(combined, ans)
+    # def test_combine_maps(self):
+    #     maps =  [[[0, 14, 39], [15, 51, -15], [50, 97, 2], [52, 53, -15], [98, 99, -48]]]
+    #     ans =   [[[0, 14, 39], [15, 49, -15], [50, 51, -13], [52, 53, -13], [98, 99, -48]]]
+    #     combined = combine_maps(maps)
+    #     self.assertEqual(combined, ans)
 
 
-    def test_main(self):
+    def test_main(self): 
         pass
         # self.assertEqual(main(test_data), 35)
         # self.assertEqual(main(test_data), 46)
