@@ -25,6 +25,10 @@ def add_value(arr):
 def build_seq(line):
     l = [make_array(line)]
     
+    # reverse array and run again
+    for a in l:
+        a.reverse()
+
     i = 0
     while True:
         new_line = build_step(l[i])
