@@ -18,4 +18,4 @@ class TestDay10(unittest.TestCase):
 
     def test_main(self):
         # self.assertEqual(main(test_data), 4)
-        self.assertEqual(main(test_data2), 8)
+        self.assertEqual(main(test_data2)[0], 8)

@@ -2,3 +2,4 @@ pytest
 genbadge
 defusedxml
 coverage
+matplotlib

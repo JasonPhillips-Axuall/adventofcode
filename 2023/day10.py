@@ -1,4 +1,4 @@
-import math
+import matplotlib.path as pth
 
 def get_adjacent(char, pos):
     if char == 'S':
@@ -85,7 +85,7 @@ def run(grid, prev, n):
         current = queue.pop(0)
         if current in visited:
             if get_char(grid, current) == 'S':
-                return int(len(visited)/2)
+                return int(len(visited)/2), visited
             else:
                 return None
 
@@ -113,9 +113,18 @@ def main(data):
     dirs = get_adjacent('S', (start))
     v = [d for d in dirs if valid_direction(grid, d)]
     runs = [run(grid, start, d) for d in v]
-    runs = [r for r in runs if runs.count(r) == 2]
+    ans = runs[1]
 
-    return min(runs)
+    poly = pth.Path(ans[1])
+    
+    points = []
+    for y in range(len(grid)):
+        for x in range(len(grid[0])):
+            if (y, x) not in ans[1]:
+                points.append((y, x))
+
+    inside = poly.contains_points(points)
+    return ans[0], len(inside[inside == True])
 
     
 if __name__ == '__main__':
