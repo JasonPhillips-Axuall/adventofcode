@@ -14,7 +14,7 @@ class DataFile():
         req = requests.get(f"https://adventofcode.com/{year}/day/{day}/input", cookies=cookie)
         
         with open(os.path.join(here, f"./data/{year}/{day}.txt"), "w") as f:
-            f.write(req.text)
+            f.write(req.text.strip())
 
     # create dir if not exists
     def create_directory(self, year: str):
